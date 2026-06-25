@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Dealer Sessions</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 30px; }
+        h1 { margin-bottom: 20px; color: #0f0f23; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+        th { background: #f8f9fb; font-weight: 600; color: #555; }
+        tr:hover { background: #fafbfc; }
+        a { color: #4f46e5; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge.created { background: #fef3c7; color: #92400e; }
+        .badge.in_progress { background: #dbeafe; color: #1e40af; }
+        .badge.completed { background: #dcfce7; color: #166534; }
+        .badge.failed { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <h1>📋 Dealer Sessions</h1>
+    <table>
+        <tr>
+            <th>Token</th>
+            <th>Status</th>
+            <th>Stage</th>
+            <th>Score</th>
+            <th>Sales Manager</th>
+            <th>Created</th>
+            <th></th>
+        </tr>
+        {% for s in sessions %}
+        <tr>
+            <td><code>{{ s.session_token[:12] }}...</code></td>
+            <td><span class="badge {{ s.status }}">{{ s.status }}</span></td>
+            <td>{{ s.current_stage }}</td>
+            <td>{{ s.completion_score }}%</td>
+            <td>{{ s.sales_manager_name or '—' }}</td>
+            <td>{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="/admin/sessions/{{ s.session_token }}">Открыть</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

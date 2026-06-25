@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session: {{ session.session_token[:12] }}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 30px; }
+        h1 { margin-bottom: 8px; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #4f46e5; text-decoration: none; }
+        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 6px rgba(0,0,0,.05); }
+        .card h3 { font-size: 16px; color: #0f0f23; margin-bottom: 12px; border-bottom: 2px solid #eef2ff; padding-bottom: 8px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+        .grid .label { color: #888; font-size: 13px; }
+        .grid .value { font-size: 15px; font-weight: 500; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 4px; font-size: 14px; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge.completed { background: #dcfce7; color: #166534; }
+        .badge.in_progress { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+<div class="nav"><a href="/admin/sessions">← К списку сессий</a></div>
+<h1>Сессия: {{ session.session_token[:16] }}...</h1>
+<p style="color:#666;margin-bottom:20px;">
+    <span class="badge {{ session.status }}">{{ session.status }}</span>
+    Stage: {{ session.current_stage }} | Score: {{ session.completion_score }}%
+</p>
+
+{% if business %}
+<div class="card">
+    <h3>🏢 Business Profile</h3>
+    <div class="grid">
+        <div><div class="label">Название</div><div class="value">{{ business.business_name or '—' }}</div></div>
+        <div><div class="label">Индустрия</div><div class="value">{{ business.industry or '—' }}</div></div>
+        <div><div class="label">Сайт</div><div class="value">{{ business.website or '—' }}</div></div>
+        <div><div class="label">Город</div><div class="value">{{ business.city or '—' }}</div></div>
+        <div><div class="label">Сотрудников</div><div class="value">{{ business.employees or '—' }}</div></div>
+        <div><div class="label">Лет в бизнесе</div><div class="value">{{ business.years_in_business or '—' }}</div></div>
+    </div>
+</div>
+{% endif %}
+
+{% if audience %}
+<div class="card">
+    <h3>� Audience Profile</h3>
+    <div class="grid">
+        <div><div class="label">Клиентов в месяц</div><div class="value">{{ audience.monthly_customers or '—' }}</div></div>
+        <div><div class="label">Повторных</div><div class="value">{{ audience.repeat_rate or '—' }}%</div></div>
+    </div>
+</div>
+{% endif %}
+
+{% if segments %}
+<div class="card">
+    <h3>🎯 Сегменты аудитории</h3>
+    <ul>
+        {% for seg in segments %}
+        <li><strong>{{ seg.name }}</strong></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if channels %}
+<div class="card">
+    <h3>📡 Каналы коммуникации</h3>
+    <ul>
+        {% for ch in channels %}
+        <li>{{ ch.channel_type }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if opportunities %}
+<div class="card">
+    <h3>💡 Потенциальные офферы</h3>
+    <ul>
+        {% for opp in opportunities %}
+        <li>{{ opp.category }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if metrics %}
+<div class="card">
+    <h3>📊 Partner Score</h3>
+    <div class="grid">
+        <div><div class="label">Audience Size</div><div class="value">{{ metrics.audience_size_score }}</div></div>
+        <div><div class="label">Trust</div><div class="value">{{ metrics.audience_trust_score }}</div></div>
+        <div><div class="label">Reachability</div><div class="value">{{ metrics.reachability_score }}</div></div>
+        <div><div class="label">Cross-Sell</div><div class="value">{{ metrics.cross_sell_score }}</div></div>
+        <div><div class="label">Data Quality</div><div class="value">{{ metrics.data_quality_score }}</div></div>
+        <div><div class="label"><strong>Total</strong></div><div class="value"><strong>{{ metrics.partner_score_total }}</strong></div></div>
+    </div>
+</div>
+{% endif %}
+
+{% if session.sales_summary %}
+<div class="card">
+    <h3>📋 Sales Summary</h3>
+    <p>{{ session.sales_summary }}</p>
+</div>
+{% endif %}
+</body>
+</html>
